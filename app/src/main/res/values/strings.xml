@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">CYST</string>
+
+    <string name="action_hint">Activity</string>
+    <string name="birthdatre_hint">Birthdate</string>
+
+    <string name="title_time_spended">Spended time</string>
+    <string name="title_unit_time">Times unit</string>
+
+    <string-array name="tiempo_intervalos">
+        <item>Select one…</item>
+        <item>seconds</item>
+        <item>minutes</item>
+        <item>hours</item>
+        <item>days</item>
+        <item>months</item>
+        <item>years</item>
+    </string-array>
+
+    <string-array name="time_units">
+        <item>Select one…</item>
+        <item>day</item>
+        <item>month</item>
+        <item>year</item>
+    </string-array>
+
+</resources>
