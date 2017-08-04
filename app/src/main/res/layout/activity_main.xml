@@ -15,20 +15,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="@dimen/margin_contents">
+        android:layout_marginStart="@dimen/margin_contents"
+        android:layout_marginEnd="@dimen/margin_contents"
+        android:layout_marginTop="@dimen/margin_contents"
+        android:layout_marginBottom="@dimen/activity_title_action_margin">
 
-        <ImageView
-            android:id="@+id/img_action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_date_range_black_24dp" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/til_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin">
+            android:layout_margin="@dimen/margin_contents">
 
             <EditText
                 android:id="@+id/edt_action"
@@ -44,7 +41,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_spinner_time"
+        android:id="@+id/ll_spinner_time_spended"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -53,15 +50,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="@dimen/activity_title_action_margin"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:text="@string/title_time_spended"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="@dimen/margin_contents"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/img_spended_times"
@@ -70,7 +66,7 @@
                 android:layout_centerInParent="true"
                 android:layout_alignParentStart="true"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_date_range_black_24dp" />
+                android:src="@drawable/ic_timer_black_24dp" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/til_spended_times"
@@ -78,44 +74,67 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_margin="@dimen/activity_horizontal_margin">
+                android:layout_marginStart="@dimen/margin_contents"
+                android:layout_marginEnd="@dimen/margin_contents">
 
                 <EditText
                     android:id="@+id/edt_times"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="3"
+                    android:layout_height="match_parent"
+                    android:ems="2"
                     android:labelFor="@+id/edt_times"
+                    android:gravity="center"
                     android:maxLines="1"
                     android:inputType="number"/>
             </android.support.design.widget.TextInputLayout>
 
-            <Spinner
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinner_time"
-                android:layout_toEndOf="@+id/til_spended_times"
+                android:orientation="horizontal"
                 android:layout_centerInParent="true"
-                android:layout_margin="@dimen/margin_contents"
-                android:layout_alignParentEnd="true"/>
+                android:layout_toEndOf="@+id/til_spended_times">
+
+                <Spinner
+                    android:id="@+id/spinner_units"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/spinner_min_height"
+                    android:layout_marginStart="@dimen/margin_contents"
+                    android:layout_weight="1"/>
+
+                <Spinner
+                    android:id="@+id/spinner_time_interval"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/spinner_min_height"
+                    android:layout_marginStart="@dimen/margin_contents"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
         </RelativeLayout>
 
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/ll_occurrences"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_margin="@dimen/margin_contents">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="@dimen/activity_title_action_margin"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:text="@string/title_unit_time"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="@dimen/margin_contents"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/img_occurrences"
@@ -124,7 +143,7 @@
             android:layout_centerInParent="true"
             android:layout_alignParentStart="true"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_date_range_black_24dp" />
+            android:src="@drawable/ic_timelapse_black_24dp" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/til_occurrences"
@@ -132,14 +151,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_margin="@dimen/activity_horizontal_margin">
+            android:layout_margin="@dimen/margin_contents">
 
             <EditText
                 android:id="@+id/edt_occurrences"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:labelFor="@+id/edt_occurrences"
-                android:ems="3"
+                android:ems="2"
+                android:gravity="center"
                 android:maxLines="1"
                 android:inputType="number"/>
         </android.support.design.widget.TextInputLayout>
@@ -150,9 +170,13 @@
             android:id="@+id/spinner_time_units"
             android:layout_toEndOf="@+id/til_occurrences"
             android:layout_centerInParent="true"
-            android:layout_margin="@dimen/margin_contents"
+            android:layout_marginStart="@dimen/margin_contents"
+            android:minHeight="@dimen/spinner_min_height"
             android:layout_alignParentEnd="true"/>
-    </RelativeLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_birthdate"
@@ -172,17 +196,26 @@
             android:id="@+id/til_birthdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin">
+            android:layout_margin="@dimen/margin_contents">
 
             <EditText
                 android:id="@+id/edt_birthdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none"
+                android:inputType="date"
+                android:focusable="false"
                 android:hint="@string/birthdatre_hint"/>
 
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_calculate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="calculate"
+        android:text="Calculate"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

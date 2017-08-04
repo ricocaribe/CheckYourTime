@@ -4,21 +4,18 @@
     <string name="action_hint">Activity</string>
     <string name="birthdatre_hint">Birthdate</string>
 
-    <string name="title_time_spended">Spended time</string>
-    <string name="title_unit_time">Times unit</string>
+    <string name="title_time_spended">Time per day spended</string>
+    <string name="title_unit_time">Duration</string>
 
     <string-array name="tiempo_intervalos">
-        <item>Select one…</item>
+        <item>Select…</item>
         <item>seconds</item>
         <item>minutes</item>
         <item>hours</item>
-        <item>days</item>
-        <item>months</item>
-        <item>years</item>
     </string-array>
 
     <string-array name="time_units">
-        <item>Select one…</item>
+        <item>Select…</item>
         <item>day</item>
         <item>month</item>
         <item>year</item>
