@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "978652375301",
+    "firebase_url": "https://checkyourtime-d615d.firebaseio.com",
+    "project_id": "checkyourtime-d615d",
+    "storage_bucket": "checkyourtime-d615d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978652375301:android:1deb4799815de291",
+        "android_client_info": {
+          "package_name": "com.jmrp.checkyourtime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "978652375301-lmuncgtlnvrdra50himom0b39au2iacu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7vIRFQnC2sLXXE3aRqcMCgn716a7y6iY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
