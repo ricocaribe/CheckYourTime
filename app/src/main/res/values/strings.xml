@@ -21,4 +21,16 @@
         <item>year</item>
     </string-array>
 
+    <string name="native_ad_unit_id">ca-app-pub-9483075303153381/5695417459</string>
+    <string name="test_ad">ca-app-pub-3940256099942544/6300978111</string>
+
+
+
+    <!--Errors-->
+    <string name="error_empty_action">Empty activity</string>
+    <string name="error_empty_time">Empty time</string>
+    <string name="error_empty_duration">Empty duration</string>
+
+    <string name="resume_time">Time spended</string>
+
 </resources>

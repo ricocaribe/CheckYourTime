@@ -3,6 +3,7 @@ package com.jmrp.checkyourtime;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,10 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.MobileAds;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -25,20 +29,29 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TextInputLayout til_action;
+    private TextInputLayout til_spended_times;
+    private TextInputLayout til_duration;
     private EditText userBirthdate;
     private Calendar myCalendar = Calendar.getInstance();
     private Spinner spinner_units;
     private EditText edt_units;
     private Spinner spinner_time_interval;
     private Spinner spinner_ocurrences;
-    private EditText edt_ocurrences;
+    private EditText edt_duration;
+    private Button btn_calculate;
     private boolean enabledFirst = true;
     private boolean enabledSecond = true;
+    private boolean errors;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-9483075303153381~1062037872");
+
+        configTextInputLayouts();
 
         configSpinnerTime();
 
@@ -47,6 +60,44 @@ public class MainActivity extends AppCompatActivity {
         configSpinnerTimeUnits();
 
         configEdtBirthdate();
+    }
+
+
+    private void configTextInputLayouts(){
+
+        til_action = (TextInputLayout) findViewById(R.id.til_action);
+        til_spended_times = (TextInputLayout) findViewById(R.id.til_spended_times);
+        til_duration = (TextInputLayout) findViewById(R.id.til_duration);
+
+        if(null!=til_action.getEditText()) {
+            til_action.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        isValidAction(til_action.getEditText().getText().toString());
+                    }
+                }
+            });
+        }
+
+        if(null!=til_spended_times.getEditText()) {
+            til_spended_times.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        isValidSpendedTime(til_spended_times.getEditText().getText().toString());
+                    }
+                }
+            });
+        }
+
+        if(null!=til_duration.getEditText()) {
+            til_duration.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if(!hasFocus) {
+                        isValidDuration(til_duration.getEditText().getText().toString());
+                    }
+                }
+            });
+        }
     }
 
 
@@ -96,9 +147,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private boolean isValidAction(String titulo) {
+        if (!titulo.equals("")){
+            til_action.setError(null);
+            errors = false;
+            return true;
+        } else {
+            errors = true;
+            til_action.setError(getResources().getString(R.string.error_empty_action));
+            return false;
+        }
+    }
+
+
+    private boolean isValidSpendedTime(String titulo) {
+        if (!titulo.equals("")){
+            til_spended_times.setError(null);
+            errors = false;
+            return true;
+        } else {
+            errors = true;
+            til_spended_times.setError(getResources().getString(R.string.error_empty_time));
+            return false;
+        }
+    }
+
+
+    private boolean isValidDuration(String titulo) {
+        if (!titulo.equals("")){
+            til_duration.setError(null);
+            errors = false;
+            return true;
+        } else {
+            errors = true;
+            til_duration.setError(getResources().getString(R.string.error_empty_duration));
+            return false;
+        }
+    }
+
+
     private void configSpinnerTimeIntervals(){
         spinner_time_interval = (Spinner) findViewById(R.id.spinner_time_interval);
-        spinner_time_interval.setEnabled(false);
 
         // Initializing an ArrayAdapter
         final List<String> items = Arrays.asList(getResources().getStringArray(R.array.time_units));
@@ -133,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
                 else if(position == 2) {
                     spinner_ocurrences.setEnabled(true);
                     enabledFirst = false;
-                    enabledSecond = false;
+                    enabledSecond = true;
                 }
                 else if(position==3) {
                     spinner_ocurrences.setEnabled(true);
@@ -152,10 +241,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void configSpinnerTimeUnits(){
-        edt_ocurrences = (EditText) findViewById(R.id.edt_occurrences);
+
+        edt_duration = (EditText) findViewById(R.id.edt_duration);
 
         spinner_ocurrences = (Spinner) findViewById(R.id.spinner_ocurrences);
-        spinner_ocurrences.setEnabled(false);
 
         // Initializing an ArrayAdapter
         List<String> items = Arrays.asList(getResources().getStringArray(R.array.time_units));
@@ -184,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void configEdtBirthdate(){
         userBirthdate = (EditText) findViewById(R.id.edt_birthdate);
+
         userBirthdate.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -192,6 +282,9 @@ public class MainActivity extends AppCompatActivity {
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
+
+        btn_calculate = (Button) findViewById(R.id.btn_calculate);
+
     }
 
 
@@ -206,26 +299,32 @@ public class MainActivity extends AppCompatActivity {
             String myFormat = "MM/dd/yyyy";
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
             userBirthdate.setText(sdf.format(myCalendar.getTime()));
+
+            btn_calculate.setEnabled(true);
         }
     };
 
 
     public void calculate(View view){
-        long totalLifeTime = System.currentTimeMillis() - myCalendar.getTimeInMillis();
-        long totalTime = getDedicatedTime();
+        if(!errors){
+            long totalLifeTime = System.currentTimeMillis() - myCalendar.getTimeInMillis();
+            long totalTime = getDedicatedTime();
 
-        float percent = round((totalTime*100)/totalLifeTime, 2);
+            float percent = round((totalTime*100)/totalLifeTime, 2);
 
-        Log.i(getClass().getSimpleName(), "TotalTime: " + totalTime);
-        Log.i(getClass().getSimpleName(), "Percent: " + percent);
+            Log.i(getClass().getSimpleName(), "TotalTime: " + totalTime);
+            Log.i(getClass().getSimpleName(), "Percent: " + percent);
 
-        Intent intent = new Intent(MainActivity.this, ResultActivity.class);
-        intent.putExtra("TIME", totalTime);
-        intent.putExtra("PERCENT", percent);
-        startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+            intent.putExtra("ACTIVITY", til_action.getEditText().getText().toString());
+            intent.putExtra("TIME", totalTime);
+            intent.putExtra("PERCENT", percent);
+            startActivity(intent);
 
-        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        }
     }
+
 
     private long getDedicatedTime(){
         long dedicatedTime = 0L;
@@ -236,14 +335,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         if(spinner_time_interval.getSelectedItemPosition()==1 && spinner_ocurrences.getSelectedItemPosition()==2) {
-            dedicatedTime = Long.parseLong(edt_ocurrences.getText().toString())*30*dedicatedTime;
+            dedicatedTime = Long.parseLong(edt_duration.getText().toString())*30*dedicatedTime;
         }
         else if(spinner_time_interval.getSelectedItemPosition()==1 && spinner_ocurrences.getSelectedItemPosition()==3) {
-            dedicatedTime = Long.parseLong(edt_ocurrences.getText().toString())*365*dedicatedTime;
+            dedicatedTime = Long.parseLong(edt_duration.getText().toString())*365*dedicatedTime;
         }
 
         if(spinner_time_interval.getSelectedItemPosition()==2 && spinner_ocurrences.getSelectedItemPosition()==3) {
-            dedicatedTime = Long.parseLong(edt_ocurrences.getText().toString())*12*dedicatedTime;
+            dedicatedTime = Long.parseLong(edt_duration.getText().toString())*12*dedicatedTime;
         }
 
         Log.i(getClass().getSimpleName(), "DedicatedTime: " + dedicatedTime);

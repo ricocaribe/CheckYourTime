@@ -1,23 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_margin="@dimen/activity_horizontal_margin"
-    tools:context="com.jmrp.checkyourtime.ResultActivity">
+    tools:context="com.jmrp.checkyourtime.ResultActivity"
+    android:layout_margin="@dimen/activity_horizontal_margin">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/txt_title_result"
+        android:text="@string/action_hint"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_result_actividad"
+        android:layout_below="@+id/txt_title_result"
+        android:maxLines="2"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+        android:layout_marginBottom="@dimen/margin_contents"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/divider"
+        android:layout_below="@+id/txt_result_actividad"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
+        android:id="@+id/title_result_percent"
+        android:text="@string/resume_time"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_result_percent"
         android:id="@+id/txt_result_time"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+        android:layout_marginBottom="@dimen/activity_title_action_margin"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_result_time"
         android:id="@+id/txt_result_percent"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
+        android:layout_centerInParent="true"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"/>
 
-</LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_trollface"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/txt_result_percent"
+        android:layout_margin="@dimen/activity_title_action_margin"/>
+
+    <com.google.android.gms.ads.NativeExpressAdView
+        android:id="@+id/adViewNative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        ads:adUnitId="@string/test_ad"
+        ads:adSize="FULL_WIDTHx120"/>
+
+</RelativeLayout>
