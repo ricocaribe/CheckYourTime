@@ -167,7 +167,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <Spinner
-                android:id="@+id/spinner_ocurrences"
+                android:id="@+id/spinner_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -212,6 +212,17 @@
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_birthdate"
+        android:id="@+id/txt_review_data"
+        android:layout_centerInParent="true"
+        android:textColor="@android:color/holo_red_light"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/activity_title_action_margin"/>
 
     <Button
         android:id="@+id/btn_calculate"

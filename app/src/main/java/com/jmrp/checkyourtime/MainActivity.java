@@ -2,6 +2,7 @@ package com.jmrp.checkyourtime;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
@@ -20,7 +21,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.MobileAds;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -30,6 +30,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private TextInputLayout til_action;
+    private EditText edt_action;
     private TextInputLayout til_spended_times;
     private TextInputLayout til_duration;
     private EditText userBirthdate;
@@ -37,12 +38,13 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinner_units;
     private EditText edt_units;
     private Spinner spinner_time_interval;
-    private Spinner spinner_ocurrences;
+    private Spinner spinner_duration;
     private EditText edt_duration;
     private Button btn_calculate;
     private boolean enabledFirst = true;
     private boolean enabledSecond = true;
-    private boolean errors;
+    private DatePickerDialog datePickerDialog;
+    private TextView txt_review_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-9483075303153381~1062037872");
+
+        txt_review_data = (TextView) findViewById(R.id.txt_review_data);
 
         configTextInputLayouts();
 
@@ -66,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private void configTextInputLayouts(){
 
         til_action = (TextInputLayout) findViewById(R.id.til_action);
+        edt_action = (EditText) findViewById(R.id.edt_action);
         til_spended_times = (TextInputLayout) findViewById(R.id.til_spended_times);
         til_duration = (TextInputLayout) findViewById(R.id.til_duration);
 
@@ -150,10 +155,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean isValidAction(String titulo) {
         if (!titulo.equals("")){
             til_action.setError(null);
-            errors = false;
+            edt_units.setEnabled(true);
             return true;
         } else {
-            errors = true;
             til_action.setError(getResources().getString(R.string.error_empty_action));
             return false;
         }
@@ -163,10 +167,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean isValidSpendedTime(String titulo) {
         if (!titulo.equals("")){
             til_spended_times.setError(null);
-            errors = false;
+            spinner_units.setEnabled(true);
             return true;
         } else {
-            errors = true;
             til_spended_times.setError(getResources().getString(R.string.error_empty_time));
             return false;
         }
@@ -176,10 +179,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isValidDuration(String titulo) {
         if (!titulo.equals("")){
             til_duration.setError(null);
-            errors = false;
             return true;
         } else {
-            errors = true;
             til_duration.setError(getResources().getString(R.string.error_empty_duration));
             return false;
         }
@@ -214,20 +215,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
+
                 if(position == 1) {
-                    spinner_ocurrences.setEnabled(true);
-                    enabledFirst = false;
+                    enabledFirst = true;
                     enabledSecond = true;
+                    spinner_duration.setEnabled(true);
                 }
                 else if(position == 2) {
-                    spinner_ocurrences.setEnabled(true);
                     enabledFirst = false;
                     enabledSecond = true;
+                    spinner_duration.setEnabled(true);
                 }
                 else if(position==3) {
-                    spinner_ocurrences.setEnabled(true);
                     enabledFirst = false;
                     enabledSecond = false;
+                    spinner_duration.setEnabled(true);
                 }
             }
 
@@ -244,7 +246,8 @@ public class MainActivity extends AppCompatActivity {
 
         edt_duration = (EditText) findViewById(R.id.edt_duration);
 
-        spinner_ocurrences = (Spinner) findViewById(R.id.spinner_ocurrences);
+        spinner_duration = (Spinner) findViewById(R.id.spinner_duration);
+        spinner_duration.setEnabled(false);
 
         // Initializing an ArrayAdapter
         List<String> items = Arrays.asList(getResources().getStringArray(R.array.time_units));
@@ -267,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_ocurrences.setAdapter(adapterTime);
+        spinner_duration.setAdapter(adapterTime);
     }
 
 
@@ -278,8 +281,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(MainActivity.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                datePickerDialog = new DatePickerDialog(MainActivity.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+//                datePickerDialog.getDatePicker().setMaxDate(getDedicatedTime());
+                datePickerDialog.show();
             }
         });
 
@@ -306,17 +311,22 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void calculate(View view){
-        if(!errors){
-            long totalLifeTime = System.currentTimeMillis() - myCalendar.getTimeInMillis();
+
+        long totalLifeTime = System.currentTimeMillis() - myCalendar.getTimeInMillis();
+
+        if(!errors(totalLifeTime)){
+
             long totalTime = getDedicatedTime();
 
-            float percent = round((totalTime*100)/totalLifeTime, 2);
+            Log.i(getClass().getSimpleName(), "LifeTime: " + totalLifeTime);
+            Log.i(getClass().getSimpleName(), "Time: " + totalTime);
 
-            Log.i(getClass().getSimpleName(), "TotalTime: " + totalTime);
+            double percent = (double) (totalTime*100)/totalLifeTime;
+
             Log.i(getClass().getSimpleName(), "Percent: " + percent);
 
             Intent intent = new Intent(MainActivity.this, ResultActivity.class);
-            intent.putExtra("ACTIVITY", til_action.getEditText().getText().toString());
+            intent.putExtra("ACTIVITY", edt_action.getText().toString());
             intent.putExtra("TIME", totalTime);
             intent.putExtra("PERCENT", percent);
             startActivity(intent);
@@ -333,26 +343,67 @@ public class MainActivity extends AppCompatActivity {
         else if(spinner_units.getSelectedItemPosition()==2) dedicatedTime = (long)(Integer.parseInt(edt_units.getText().toString())*60000);
         else if(spinner_units.getSelectedItemPosition()==3) dedicatedTime = (long)(Integer.parseInt(edt_units.getText().toString())*3600000);
 
+        Log.i(getClass().getSimpleName(), "InitialDedicatedTime: " + dedicatedTime);
 
-        if(spinner_time_interval.getSelectedItemPosition()==1 && spinner_ocurrences.getSelectedItemPosition()==2) {
+        if(spinner_time_interval.getSelectedItemPosition()==1 && spinner_duration.getSelectedItemPosition()==1) {
+            dedicatedTime = Long.parseLong(edt_duration.getText().toString())*dedicatedTime;
+        }
+        else if(spinner_time_interval.getSelectedItemPosition()==1 && spinner_duration.getSelectedItemPosition()==2) {
             dedicatedTime = Long.parseLong(edt_duration.getText().toString())*30*dedicatedTime;
         }
-        else if(spinner_time_interval.getSelectedItemPosition()==1 && spinner_ocurrences.getSelectedItemPosition()==3) {
+        else if(spinner_time_interval.getSelectedItemPosition()==1 && spinner_duration.getSelectedItemPosition()==3) {
             dedicatedTime = Long.parseLong(edt_duration.getText().toString())*365*dedicatedTime;
         }
 
-        if(spinner_time_interval.getSelectedItemPosition()==2 && spinner_ocurrences.getSelectedItemPosition()==3) {
+        if(spinner_time_interval.getSelectedItemPosition()==2 && spinner_duration.getSelectedItemPosition()==2) {
+            dedicatedTime = Long.parseLong(edt_duration.getText().toString())*dedicatedTime;
+        }
+        else if(spinner_time_interval.getSelectedItemPosition()==2 && spinner_duration.getSelectedItemPosition()==3) {
             dedicatedTime = Long.parseLong(edt_duration.getText().toString())*12*dedicatedTime;
         }
 
-        Log.i(getClass().getSimpleName(), "DedicatedTime: " + dedicatedTime);
+        if(spinner_time_interval.getSelectedItemPosition()==3 && spinner_duration.getSelectedItemPosition()==3) {
+            dedicatedTime = Long.parseLong(edt_duration.getText().toString())*dedicatedTime;
+        }
+
+        Log.i(getClass().getSimpleName(), "FinalDedicatedTime: " + dedicatedTime);
+
         return dedicatedTime;
     }
 
 
-    public static float round(float d, int decimalPlace) {
-        BigDecimal bd = new BigDecimal(Float.toString(d));
-        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-        return bd.floatValue();
+    private boolean errors(long lifeTime){
+        boolean errors = false;
+
+        if(til_action.getError()!=null ||
+                til_spended_times.getError()!=null ||
+                til_duration.getError()!=null ||
+                til_duration.getEditText().getText().toString().isEmpty() ||
+                til_spended_times.getEditText().getText().toString().isEmpty() ||
+                til_action.getEditText().getText().toString().isEmpty()){
+
+            showError(getResources().getString(R.string.error_complete));
+            errors = true;
+        }
+        else if(getDedicatedTime()>=lifeTime){
+
+            showError(getResources().getString(R.string.error_duration));
+
+            errors = true;
+        }
+
+        return errors;
+    }
+
+    private void showError(String message){
+        txt_review_data.setVisibility(View.VISIBLE);
+        txt_review_data.setText(message);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                txt_review_data.setVisibility(View.GONE);
+            }
+        }, 2000);
+
     }
 }

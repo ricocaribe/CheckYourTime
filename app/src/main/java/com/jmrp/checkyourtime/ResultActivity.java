@@ -22,7 +22,6 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         mNativeExpressAdView = (NativeExpressAdView) findViewById(R.id.adViewNative);
-//        AdRequest request = new AdRequest.Builder().addTestDevice("32A296D5FA19CA4B7400E595FEE254E4").build();
         AdRequest request = new AdRequest.Builder().addTestDevice("32A296D5FA19CA4B7400E595FEE254E4").build();
         mNativeExpressAdView.loadAd(request);
 
@@ -66,23 +65,15 @@ public class ResultActivity extends AppCompatActivity {
 
         TextView txtTime = (TextView) findViewById(R.id.txt_result_time);
         long millis =  getIntent().getLongExtra("TIME", 0L);
-        String hms = String.format("%02dhh:%02dmm:%02dss", TimeUnit.MILLISECONDS.toHours(millis),
+        String hms = String.format("%02ddd:%02dhh:%02dmm:%02dss", TimeUnit.MILLISECONDS.toDays(millis),
+                TimeUnit.MILLISECONDS.toHours(millis) % TimeUnit.DAYS.toHours(1),
                 TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
                 TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
         txtTime.setText(hms);
 
         TextView txtPercent = (TextView) findViewById(R.id.txt_result_percent);
-        txtPercent.setText(getIntent().getFloatExtra("PERCENT", 0.0f) + "% de tu vida");
+        txtPercent.setText(String.format("%s%% \n %s", String.format("%.2f", getIntent().getDoubleExtra("PERCENT", 0.0d)), getResources().getString(R.string.live_percent)));
 
-    }
-
-    private String secondsToString(long seconds) {
-        double numyears = Math.floor(seconds / 31536000);
-        double numdays = Math.floor((seconds % 31536000) / 86400);
-        double numhours = Math.floor(((seconds % 31536000) % 86400) / 3600);
-        double numminutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60);
-        double numseconds = (((seconds % 31536000) % 86400) % 3600) % 60;
-        return numyears + " years " +  numdays + " days " + numhours + " hours " + numminutes + " minutes " + numseconds + " seconds";
     }
 
     @Override

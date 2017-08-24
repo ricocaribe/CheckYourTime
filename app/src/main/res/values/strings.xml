@@ -4,8 +4,11 @@
     <string name="action_hint">Activity</string>
     <string name="birthdatre_hint">Birthdate</string>
 
-    <string name="title_time_spended">Time per day spended</string>
+    <string name="title_time_spended">Time spended</string>
     <string name="title_unit_time">Duration</string>
+
+    <string name="live_percent">lifetime</string>
+
 
     <string-array name="tiempo_intervalos">
         <item>Select…</item>
@@ -30,7 +33,8 @@
     <string name="error_empty_action">Empty activity</string>
     <string name="error_empty_time">Empty time</string>
     <string name="error_empty_duration">Empty duration</string>
-
-    <string name="resume_time">Time spended</string>
+    <string name="error_select_item">Select item</string>
+    <string name="error_complete">Please, complete form</string>
+    <string name="error_duration">Duration cannot be greater than lifetime</string>
 
 </resources>
