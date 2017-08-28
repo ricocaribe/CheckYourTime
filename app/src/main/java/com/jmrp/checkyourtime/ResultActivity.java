@@ -1,8 +1,11 @@
 package com.jmrp.checkyourtime;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
@@ -75,6 +78,26 @@ public class ResultActivity extends AppCompatActivity {
         txtPercent.setText(String.format("%s%% \n %s", String.format("%.2f", getIntent().getDoubleExtra("PERCENT", 0.0d)), getResources().getString(R.string.live_percent)));
 
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_result_act, menu);
+        MenuItem newFormItem = menu.findItem(R.id.item_new_form);
+        //Click del item del menu para abrir la barra de búsquedas o para contraerla
+        newFormItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                startActivity(new Intent(ResultActivity.this, MainActivity.class));
+                overridePendingTransition(R.anim.slide_to_left, R.anim.slide_from_right);
+                return false;
+            }
+        });
+
+        return true;
+    }
+
 
     @Override
     public void onResume() {

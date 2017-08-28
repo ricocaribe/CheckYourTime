@@ -2,24 +2,27 @@ package com.jmrp.checkyourtime;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
+import com.jmrp.checkyourtime.utils.GenericTextWatcher;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText edt_action;
     private TextInputLayout til_spended_times;
     private TextInputLayout til_duration;
+    private TextInputLayout til_userBirthdate;
     private EditText userBirthdate;
     private Calendar myCalendar = Calendar.getInstance();
     private Spinner spinner_units;
@@ -40,11 +44,10 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinner_time_interval;
     private Spinner spinner_duration;
     private EditText edt_duration;
-    private Button btn_calculate;
     private boolean enabledFirst = true;
     private boolean enabledSecond = true;
     private DatePickerDialog datePickerDialog;
-    private TextView txt_review_data;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-9483075303153381~1062037872");
-
-        txt_review_data = (TextView) findViewById(R.id.txt_review_data);
 
         configTextInputLayouts();
 
@@ -67,42 +68,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void configTextInputLayouts(){
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main_act, menu);
+        MenuItem clearFormItem = menu.findItem(R.id.item_clear_form);
+        //Click del item del menu para abrir la barra de búsquedas o para contraerla
+        clearFormItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                clearForm();
+                return false;
+            }
+        });
 
+        return true;
+    }
+
+
+    private void configTextInputLayouts(){
         til_action = (TextInputLayout) findViewById(R.id.til_action);
         edt_action = (EditText) findViewById(R.id.edt_action);
         til_spended_times = (TextInputLayout) findViewById(R.id.til_spended_times);
         til_duration = (TextInputLayout) findViewById(R.id.til_duration);
 
-        if(null!=til_action.getEditText()) {
-            til_action.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        isValidAction(til_action.getEditText().getText().toString());
-                    }
-                }
-            });
-        }
-
-        if(null!=til_spended_times.getEditText()) {
-            til_spended_times.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        isValidSpendedTime(til_spended_times.getEditText().getText().toString());
-                    }
-                }
-            });
-        }
-
-        if(null!=til_duration.getEditText()) {
-            til_duration.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if(!hasFocus) {
-                        isValidDuration(til_duration.getEditText().getText().toString());
-                    }
-                }
-            });
-        }
+        if(null!=til_action.getEditText()) til_action.getEditText().addTextChangedListener(new GenericTextWatcher(til_action, getApplicationContext()));
+        if(null!=til_spended_times.getEditText()) til_spended_times.getEditText().addTextChangedListener(new GenericTextWatcher(til_spended_times, getApplicationContext()));
+        if(null!=til_duration.getEditText()) til_duration.getEditText().addTextChangedListener(new GenericTextWatcher(til_duration, getApplicationContext()));
     }
 
 
@@ -149,41 +141,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-    }
-
-
-    private boolean isValidAction(String titulo) {
-        if (!titulo.equals("")){
-            til_action.setError(null);
-            edt_units.setEnabled(true);
-            return true;
-        } else {
-            til_action.setError(getResources().getString(R.string.error_empty_action));
-            return false;
-        }
-    }
-
-
-    private boolean isValidSpendedTime(String titulo) {
-        if (!titulo.equals("")){
-            til_spended_times.setError(null);
-            spinner_units.setEnabled(true);
-            return true;
-        } else {
-            til_spended_times.setError(getResources().getString(R.string.error_empty_time));
-            return false;
-        }
-    }
-
-
-    private boolean isValidDuration(String titulo) {
-        if (!titulo.equals("")){
-            til_duration.setError(null);
-            return true;
-        } else {
-            til_duration.setError(getResources().getString(R.string.error_empty_duration));
-            return false;
-        }
     }
 
 
@@ -275,7 +232,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void configEdtBirthdate(){
+        til_userBirthdate = (TextInputLayout) findViewById(R.id.til_birthdate);
+
         userBirthdate = (EditText) findViewById(R.id.edt_birthdate);
+
+        if(null!=til_userBirthdate) til_userBirthdate.getEditText().addTextChangedListener(new GenericTextWatcher(til_userBirthdate, getApplicationContext()));
 
         userBirthdate.setOnClickListener(new View.OnClickListener() {
 
@@ -287,9 +248,6 @@ public class MainActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
-
-        btn_calculate = (Button) findViewById(R.id.btn_calculate);
-
     }
 
 
@@ -304,8 +262,6 @@ public class MainActivity extends AppCompatActivity {
             String myFormat = "MM/dd/yyyy";
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
             userBirthdate.setText(sdf.format(myCalendar.getTime()));
-
-            btn_calculate.setEnabled(true);
         }
     };
 
@@ -380,12 +336,18 @@ public class MainActivity extends AppCompatActivity {
                 til_duration.getError()!=null ||
                 til_duration.getEditText().getText().toString().isEmpty() ||
                 til_spended_times.getEditText().getText().toString().isEmpty() ||
-                til_action.getEditText().getText().toString().isEmpty()){
+                til_action.getEditText().getText().toString().isEmpty() ||
+                til_userBirthdate.getEditText().getText().toString().isEmpty()  ||
+                til_userBirthdate.getError()!=null ||
+                spinner_units.getSelectedItemPosition()==0 ||
+                spinner_time_interval.getSelectedItemPosition()==0 ||
+                spinner_duration.getSelectedItemPosition()==0){
 
             showError(getResources().getString(R.string.error_complete));
             errors = true;
         }
-        else if(getDedicatedTime()>=lifeTime){
+        else if(getDedicatedTime()>=lifeTime || (spinner_duration.getSelectedItemPosition()==3 &&
+                Integer.parseInt(edt_duration.getText().toString())>(Calendar.getInstance().get(Calendar.YEAR) - myCalendar.get(Calendar.YEAR)))){
 
             showError(getResources().getString(R.string.error_duration));
 
@@ -395,15 +357,27 @@ public class MainActivity extends AppCompatActivity {
         return errors;
     }
 
-    private void showError(String message){
-        txt_review_data.setVisibility(View.VISIBLE);
-        txt_review_data.setText(message);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                txt_review_data.setVisibility(View.GONE);
-            }
-        }, 2000);
 
+    private void showError(String message){
+        LayoutInflater inflater = getLayoutInflater();
+        View toastLayout = inflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_toast_layout));
+        TextView textView = (TextView) toastLayout.findViewById(R.id.custom_toast_message);
+        textView.setText(message);
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(toastLayout);
+        toast.show();
+    }
+
+
+    private void clearForm(){
+        edt_duration.getText().clear();
+        edt_units.getText().clear();
+        edt_action.getText().clear();
+        userBirthdate.getText().clear();
+
+        spinner_duration.setSelection(0);
+        spinner_time_interval.setSelection(0);
+        spinner_units.setSelection(0);
     }
 }

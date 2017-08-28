@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CYST</string>
+    <string name="app_name">TruthHurts</string>
 
     <string name="action_hint">Activity</string>
     <string name="birthdatre_hint">Birthdate</string>
@@ -28,13 +28,18 @@
     <string name="test_ad">ca-app-pub-3940256099942544/6300978111</string>
 
 
+    <!--Menu items-->
+    <string name="title_clear_form">Clear</string>
+    <string name="title_new_form">New</string>
+
+
 
     <!--Errors-->
     <string name="error_empty_action">Empty activity</string>
     <string name="error_empty_time">Empty time</string>
     <string name="error_empty_duration">Empty duration</string>
-    <string name="error_select_item">Select item</string>
-    <string name="error_complete">Please, complete form</string>
+    <string name="error_empty_birthdate">Empty birthdate</string>
+    <string name="error_complete">Please, complete the form</string>
     <string name="error_duration">Duration cannot be greater than lifetime</string>
 
 </resources>

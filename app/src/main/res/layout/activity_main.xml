@@ -162,7 +162,7 @@
                     android:gravity="center"
                     android:inputType="number"
                     android:maxLength="3"
-                    android:labelFor="@+id/edt_occurrences"
+                    android:labelFor="@+id/edt_duration"
                     android:maxLines="1"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -213,24 +213,12 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ll_birthdate"
-        android:id="@+id/txt_review_data"
-        android:layout_centerInParent="true"
-        android:textColor="@android:color/holo_red_light"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-        android:visibility="gone"
-        android:layout_marginTop="@dimen/activity_title_action_margin"/>
-
     <Button
         android:id="@+id/btn_calculate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="calculate"
         android:text="Calculate"
-        android:enabled="false"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
 
