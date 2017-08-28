@@ -173,6 +173,9 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
 
+                spinner_duration.setSelection(0);
+                edt_duration.getText().clear();
+
                 if(position == 1) {
                     enabledFirst = true;
                     enabledSecond = true;

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.NativeExpressAdView;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.concurrent.TimeUnit;
 
@@ -67,11 +66,7 @@ public class ResultActivity extends AppCompatActivity {
         txt_result_actividad.setText(getIntent().getStringExtra("ACTIVITY"));
 
         TextView txtTime = (TextView) findViewById(R.id.txt_result_time);
-        long millis =  getIntent().getLongExtra("TIME", 0L);
-        String hms = String.format("%02ddd:%02dhh:%02dmm:%02dss", TimeUnit.MILLISECONDS.toDays(millis),
-                TimeUnit.MILLISECONDS.toHours(millis) % TimeUnit.DAYS.toHours(1),
-                TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
-                TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
+        String hms = parseTime(getIntent().getLongExtra("TIME", 0L));
         txtTime.setText(hms);
 
         TextView txtPercent = (TextView) findViewById(R.id.txt_result_percent);
@@ -118,5 +113,24 @@ public class ResultActivity extends AppCompatActivity {
         // Destroy the NativeExpressAdView.
         mNativeExpressAdView.destroy();
         super.onDestroy();
+    }
+
+
+    private String parseTime(long millis){
+        String time = "";
+
+        long days = TimeUnit.MILLISECONDS.toDays(millis);
+        long hours = TimeUnit.MILLISECONDS.toHours(millis) % TimeUnit.DAYS.toHours(1);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1);
+
+        Log.i(getClass().getSimpleName(), "Time: Days:" + days + ", Hours: " + hours + ", Minutes: " + minutes + ", Seconds: " + seconds);
+
+        if(days>0) time = String.valueOf(days) + " days ";
+        if(hours>0) time = time.concat(String.format(",%s hours ", String.valueOf(hours)));
+        if(minutes>0) time = time.concat(String.format(",%s minutes ", String.valueOf(minutes)));
+        if(seconds>0) time = time.concat(String.format(",%s seconds ", String.valueOf(seconds)));
+
+        return time;
     }
 }

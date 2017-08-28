@@ -12,16 +12,16 @@
 
     <string-array name="tiempo_intervalos">
         <item>Select…</item>
-        <item>seconds</item>
-        <item>minutes</item>
-        <item>hours</item>
+        <item>second/s</item>
+        <item>minute/s</item>
+        <item>hour/s</item>
     </string-array>
 
     <string-array name="time_units">
         <item>Select…</item>
-        <item>day</item>
-        <item>month</item>
-        <item>year</item>
+        <item>day/s</item>
+        <item>month/s</item>
+        <item>year/s</item>
     </string-array>
 
     <string name="native_ad_unit_id">ca-app-pub-9483075303153381/5695417459</string>
