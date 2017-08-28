@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Time</string>
+
+    <string name="action_hint">Actividad</string>
+    <string name="birthdatre_hint">Fecha de nacimiento</string>
+
+    <string name="title_time_spended">Tiempo invertido</string>
+    <string name="title_unit_time">Duración</string>
+
+    <string name="live_percent">de tu vida</string>
+
+
+    <string-array name="tiempo_intervalos">
+        <item>Selecciona…</item>
+        <item>segundos</item>
+        <item>minutos</item>
+        <item>horas</item>
+    </string-array>
+
+    <string-array name="time_units">
+        <item>Selecciona…</item>
+        <item>días</item>
+        <item>meses</item>
+        <item>años</item>
+    </string-array>
+
+    <string name="native_ad_unit_id">ca-app-pub-9483075303153381/5695417459</string>
+    <string name="test_ad">ca-app-pub-3940256099942544/6300978111</string>
+
+    <!--Menu items-->
+    <string name="title_clear_form">Reiniciar</string>
+    <string name="title_new_form">Nueva</string>
+
+    <!--Errors-->
+    <string name="error_empty_action">Actividad vacía</string>
+    <string name="error_empty_time">Tiempo vacío</string>
+    <string name="error_empty_duration">Duración vacía</string>
+    <string name="error_empty_birthdate">Fecha de nacimiento vacía</string>
+    <string name="error_complete">Por favor, completa el formulario</string>
+    <string name="error_duration">La duración no puede ser mayor que el tiempo de vida</string>
+
+</resources>
