@@ -27,6 +27,8 @@
     <string name="native_ad_unit_id">ca-app-pub-9483075303153381/5695417459</string>
     <string name="test_ad">ca-app-pub-3940256099942544/6300978111</string>
 
+    <string name="exit_message">Are you sure you want to close the application?</string>
+
 
     <!--Menu items-->
     <string name="title_clear_form">Clear</string>

@@ -1,6 +1,7 @@
 package com.jmrp.checkyourtime;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.jmrp.checkyourtime.utils.GenericTextWatcher;
 
 import java.text.SimpleDateFormat;
@@ -47,12 +49,15 @@ public class MainActivity extends AppCompatActivity {
     private boolean enabledFirst = true;
     private boolean enabledSecond = true;
     private DatePickerDialog datePickerDialog;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-9483075303153381~1062037872");
 
@@ -84,6 +89,13 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+
+    @Override
+    public void onBackPressed() {
+        showExitDialog();
+    }
+
 
 
     private void configTextInputLayouts(){
@@ -277,6 +289,11 @@ public class MainActivity extends AppCompatActivity {
 
             long totalTime = getDedicatedTime();
 
+            Bundle params = new Bundle();
+            params.putString("activity", edt_action.getText().toString());
+            params.putLong("dedicated_time", totalTime);
+            mFirebaseAnalytics.logEvent("calculate", params);
+
             Log.i(getClass().getSimpleName(), "LifeTime: " + totalLifeTime);
             Log.i(getClass().getSimpleName(), "Time: " + totalTime);
 
@@ -285,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(getClass().getSimpleName(), "Percent: " + percent);
 
             Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("ACTIVITY", edt_action.getText().toString());
             intent.putExtra("TIME", totalTime);
             intent.putExtra("PERCENT", percent);
@@ -382,5 +400,24 @@ public class MainActivity extends AppCompatActivity {
         spinner_duration.setSelection(0);
         spinner_time_interval.setSelection(0);
         spinner_units.setSelection(0);
+    }
+
+
+    private void showExitDialog(){
+        new android.app.AlertDialog.Builder(MainActivity.this)
+                .setTitle(R.string.app_name)
+                .setCancelable(false)
+                .setMessage(getResources().getString(R.string.exit_message))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 }

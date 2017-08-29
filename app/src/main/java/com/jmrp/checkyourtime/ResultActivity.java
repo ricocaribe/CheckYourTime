@@ -1,5 +1,6 @@
 package com.jmrp.checkyourtime;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -116,6 +117,12 @@ public class ResultActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
+
     private String parseTime(long millis){
         String time = "";
 
@@ -126,10 +133,10 @@ public class ResultActivity extends AppCompatActivity {
 
         Log.i(getClass().getSimpleName(), "Time: Days:" + days + ", Hours: " + hours + ", Minutes: " + minutes + ", Seconds: " + seconds);
 
-        if(days>0) time = String.valueOf(days) + " days ";
-        if(hours>0) time = time.concat(String.format(",%s hours ", String.valueOf(hours)));
-        if(minutes>0) time = time.concat(String.format(",%s minutes ", String.valueOf(minutes)));
-        if(seconds>0) time = time.concat(String.format(",%s seconds ", String.valueOf(seconds)));
+        if(days>0) time = String.valueOf(days) + "d ";
+        if(hours>0) time = time.concat(String.format("%sh ", String.valueOf(hours)));
+        if(minutes>0) time = time.concat(String.format("%s' ", String.valueOf(minutes)));
+        if(seconds>0) time = time.concat(String.format("%s''", String.valueOf(seconds)));
 
         return time;
     }
