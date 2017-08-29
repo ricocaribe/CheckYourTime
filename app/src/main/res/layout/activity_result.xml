@@ -75,6 +75,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         ads:adUnitId="@string/native_ad_unit_id"
-        ads:adSize="FULL_WIDTHx120"/>
+        ads:adSize="FULL_WIDTHx132"/>
 
 </FrameLayout>

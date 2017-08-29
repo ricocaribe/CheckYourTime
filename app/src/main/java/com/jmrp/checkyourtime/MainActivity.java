@@ -302,7 +302,6 @@ public class MainActivity extends AppCompatActivity {
             Log.i(getClass().getSimpleName(), "Percent: " + percent);
 
             Intent intent = new Intent(MainActivity.this, ResultActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("ACTIVITY", edt_action.getText().toString());
             intent.putExtra("TIME", totalTime);
             intent.putExtra("PERCENT", percent);

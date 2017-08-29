@@ -25,7 +25,7 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         mNativeExpressAdView = (NativeExpressAdView) findViewById(R.id.adViewNative);
-        AdRequest request = new AdRequest.Builder().addTestDevice("32A296D5FA19CA4B7400E595FEE254E4").build();
+        AdRequest request = new AdRequest.Builder().build();//.addTestDevice("32A296D5FA19CA4B7400E595FEE254E4")
         mNativeExpressAdView.loadAd(request);
 
         mNativeExpressAdView.setAdListener(new AdListener() {
@@ -85,8 +85,7 @@ public class ResultActivity extends AppCompatActivity {
         newFormItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                startActivity(new Intent(ResultActivity.this, MainActivity.class));
-                overridePendingTransition(R.anim.slide_to_left, R.anim.slide_from_right);
+                newActivity();
                 return false;
             }
         });
@@ -119,9 +118,30 @@ public class ResultActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
+        showExitDialog();
     }
 
+    private void newActivity(){
+        startActivity(new Intent(ResultActivity.this, MainActivity.class));
+    }
+
+    private void showExitDialog(){
+        new android.app.AlertDialog.Builder(ResultActivity.this)
+                .setTitle(R.string.app_name)
+                .setCancelable(false)
+                .setMessage(getResources().getString(R.string.exit_message))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
 
     private String parseTime(long millis){
         String time = "";
