@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Time</string>
+    <string name="app_name">Timed</string>
 
     <string name="action_hint">Actividad</string>
     <string name="birthdatre_hint">Fecha de nacimiento</string>

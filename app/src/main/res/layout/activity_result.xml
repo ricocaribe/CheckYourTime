@@ -65,13 +65,13 @@
             android:gravity="center"
             android:padding="@dimen/activity_title_action_margin"
             android:background="@drawable/circle_shape"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display2"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
 
     </RelativeLayout>
 
     <com.google.android.gms.ads.NativeExpressAdView
         android:id="@+id/adViewNative"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         ads:adUnitId="@string/native_ad_unit_id"

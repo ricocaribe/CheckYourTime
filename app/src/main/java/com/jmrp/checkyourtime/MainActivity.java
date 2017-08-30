@@ -399,6 +399,8 @@ public class MainActivity extends AppCompatActivity {
         spinner_duration.setSelection(0);
         spinner_time_interval.setSelection(0);
         spinner_units.setSelection(0);
+
+        mFirebaseAnalytics.logEvent("clear_form", null);
     }
 
 

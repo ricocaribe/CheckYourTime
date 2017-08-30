@@ -12,17 +12,21 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.concurrent.TimeUnit;
 
 public class ResultActivity extends AppCompatActivity {
 
     private NativeExpressAdView mNativeExpressAdView;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         mNativeExpressAdView = (NativeExpressAdView) findViewById(R.id.adViewNative);
         AdRequest request = new AdRequest.Builder().build();//.addTestDevice("32A296D5FA19CA4B7400E595FEE254E4")
@@ -122,6 +126,8 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     private void newActivity(){
+        mFirebaseAnalytics.logEvent("new_form", null);
+
         startActivity(new Intent(ResultActivity.this, MainActivity.class));
     }
 
