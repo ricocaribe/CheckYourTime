@@ -30,4 +30,6 @@ public interface Interactor {
         void setVista(VistaResult vista);
         void getParsedTime(long time);
     }
+
+    void showExitDialog();
 }

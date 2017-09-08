@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 import dagger.ObjectGraph;
 
-public class ResultActivity extends AppCompatActivity implements Interactor.VistaResult, CommonMethods{
+public class ResultActivity extends AppCompatActivity implements Interactor.VistaResult, Interactor{
 
     @Inject
     Interactor.PresenterResult presenterResult;

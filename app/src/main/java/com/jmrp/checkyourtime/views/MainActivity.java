@@ -40,7 +40,7 @@ import javax.inject.Inject;
 
 import dagger.ObjectGraph;
 
-public class MainActivity extends AppCompatActivity implements Interactor.VistaMain, CommonMethods{
+public class MainActivity extends AppCompatActivity implements Interactor.VistaMain, Interactor{
 
     @Inject
     Interactor.PresenterMain presenterMain;
