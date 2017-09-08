@@ -46,20 +46,20 @@ public class MainActivity extends AppCompatActivity implements Interactor.VistaM
     Interactor.PresenterMain presenterMain;
 
     private TextInputLayout til_action;
-    private EditText edt_action;
     private TextInputLayout til_spended_times;
     private TextInputLayout til_duration;
     private TextInputLayout til_userBirthdate;
-    private EditText userBirthdate;
-    private Calendar myCalendar = Calendar.getInstance();
-    private Spinner spinner_units;
     private EditText edt_units;
+    private EditText edt_action;
+    private EditText userBirthdate;
+    private EditText edt_duration;
+    private Spinner spinner_units;
     private Spinner spinner_time_interval;
     private Spinner spinner_duration;
-    private EditText edt_duration;
+    private Calendar myCalendar = Calendar.getInstance();
+    private DatePickerDialog datePickerDialog;
     private boolean enabledFirst = true;
     private boolean enabledSecond = true;
-    private DatePickerDialog datePickerDialog;
     private FirebaseAnalytics mFirebaseAnalytics;
 
 
