@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="com.jmrp.checkyourtime.ResultActivity">
+    tools:context="com.jmrp.checkyourtime.views.ResultActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

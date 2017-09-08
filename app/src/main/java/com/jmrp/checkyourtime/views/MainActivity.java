@@ -1,6 +1,7 @@
-package com.jmrp.checkyourtime;
+package com.jmrp.checkyourtime.views;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -8,7 +9,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +24,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.jmrp.checkyourtime.R;
+import com.jmrp.checkyourtime.interactors.Interactor;
+import com.jmrp.checkyourtime.dagger.MainModule;
+import com.jmrp.checkyourtime.models.Result;
 import com.jmrp.checkyourtime.utils.GenericTextWatcher;
 
 import java.text.SimpleDateFormat;
@@ -32,7 +36,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+import javax.inject.Inject;
+
+import dagger.ObjectGraph;
+
+public class MainActivity extends AppCompatActivity implements Interactor.VistaMain, CommonMethods{
+
+    @Inject
+    Interactor.PresenterMain presenterMain;
 
     private TextInputLayout til_action;
     private EditText edt_action;
@@ -56,6 +67,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Inyecta las clases con Dagger. Esto solo lo tenemos aquí por simplicidad.
+        ObjectGraph objectGraph = ObjectGraph.create(new MainModule());
+        objectGraph.inject(this);
+
+        // Le dice al presenter cuál es su vista
+        presenterMain.setVista(this);
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
@@ -259,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 datePickerDialog = new DatePickerDialog(MainActivity.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH));
-//                datePickerDialog.getDatePicker().setMaxDate(getDedicatedTime());
+
                 datePickerDialog.show();
             }
         });
@@ -282,111 +300,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void calculate(View view){
-
-        long totalLifeTime = System.currentTimeMillis() - myCalendar.getTimeInMillis();
-
-        if(!errors(totalLifeTime)){
-
-            long totalTime = getDedicatedTime();
-
-            Bundle params = new Bundle();
-            params.putString("activity", edt_action.getText().toString());
-            params.putLong("dedicated_time", totalTime);
-            mFirebaseAnalytics.logEvent("calculate", params);
-
-            Log.i(getClass().getSimpleName(), "LifeTime: " + totalLifeTime);
-            Log.i(getClass().getSimpleName(), "Time: " + totalTime);
-
-            double percent = (double) (totalTime*100)/totalLifeTime;
-
-            Log.i(getClass().getSimpleName(), "Percent: " + percent);
-
-            Intent intent = new Intent(MainActivity.this, ResultActivity.class);
-            intent.putExtra("ACTIVITY", edt_action.getText().toString());
-            intent.putExtra("TIME", totalTime);
-            intent.putExtra("PERCENT", percent);
-            startActivity(intent);
-
-            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-        }
-    }
-
-
-    private long getDedicatedTime(){
-        long dedicatedTime = 0L;
-
-        if(spinner_units.getSelectedItemPosition()==1) dedicatedTime = (long)(Integer.parseInt(edt_units.getText().toString())*1000);
-        else if(spinner_units.getSelectedItemPosition()==2) dedicatedTime = (long)(Integer.parseInt(edt_units.getText().toString())*60000);
-        else if(spinner_units.getSelectedItemPosition()==3) dedicatedTime = (long)(Integer.parseInt(edt_units.getText().toString())*3600000);
-
-        Log.i(getClass().getSimpleName(), "InitialDedicatedTime: " + dedicatedTime);
-
-        if(spinner_time_interval.getSelectedItemPosition()==1 && spinner_duration.getSelectedItemPosition()==1) {
-            dedicatedTime = Long.parseLong(edt_duration.getText().toString())*dedicatedTime;
-        }
-        else if(spinner_time_interval.getSelectedItemPosition()==1 && spinner_duration.getSelectedItemPosition()==2) {
-            dedicatedTime = Long.parseLong(edt_duration.getText().toString())*30*dedicatedTime;
-        }
-        else if(spinner_time_interval.getSelectedItemPosition()==1 && spinner_duration.getSelectedItemPosition()==3) {
-            dedicatedTime = Long.parseLong(edt_duration.getText().toString())*365*dedicatedTime;
-        }
-
-        if(spinner_time_interval.getSelectedItemPosition()==2 && spinner_duration.getSelectedItemPosition()==2) {
-            dedicatedTime = Long.parseLong(edt_duration.getText().toString())*dedicatedTime;
-        }
-        else if(spinner_time_interval.getSelectedItemPosition()==2 && spinner_duration.getSelectedItemPosition()==3) {
-            dedicatedTime = Long.parseLong(edt_duration.getText().toString())*12*dedicatedTime;
-        }
-
-        if(spinner_time_interval.getSelectedItemPosition()==3 && spinner_duration.getSelectedItemPosition()==3) {
-            dedicatedTime = Long.parseLong(edt_duration.getText().toString())*dedicatedTime;
-        }
-
-        Log.i(getClass().getSimpleName(), "FinalDedicatedTime: " + dedicatedTime);
-
-        return dedicatedTime;
-    }
-
-
-    private boolean errors(long lifeTime){
-        boolean errors = false;
-
-        if(til_action.getError()!=null ||
-                til_spended_times.getError()!=null ||
-                til_duration.getError()!=null ||
-                til_duration.getEditText().getText().toString().isEmpty() ||
-                til_spended_times.getEditText().getText().toString().isEmpty() ||
-                til_action.getEditText().getText().toString().isEmpty() ||
-                til_userBirthdate.getEditText().getText().toString().isEmpty()  ||
-                til_userBirthdate.getError()!=null ||
-                spinner_units.getSelectedItemPosition()==0 ||
-                spinner_time_interval.getSelectedItemPosition()==0 ||
-                spinner_duration.getSelectedItemPosition()==0){
-
-            showError(getResources().getString(R.string.error_complete));
-            errors = true;
-        }
-        else if(getDedicatedTime()>=lifeTime || (spinner_duration.getSelectedItemPosition()==3 &&
-                Integer.parseInt(edt_duration.getText().toString())>(Calendar.getInstance().get(Calendar.YEAR) - myCalendar.get(Calendar.YEAR)))){
-
-            showError(getResources().getString(R.string.error_duration));
-
-            errors = true;
-        }
-
-        return errors;
-    }
-
-
-    private void showError(String message){
-        LayoutInflater inflater = getLayoutInflater();
-        View toastLayout = inflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_toast_layout));
-        TextView textView = (TextView) toastLayout.findViewById(R.id.custom_toast_message);
-        textView.setText(message);
-        Toast toast = new Toast(getApplicationContext());
-        toast.setDuration(Toast.LENGTH_SHORT);
-        toast.setView(toastLayout);
-        toast.show();
+        presenterMain.calculateResult(myCalendar);
     }
 
 
@@ -403,8 +317,8 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAnalytics.logEvent("clear_form", null);
     }
 
-
-    private void showExitDialog(){
+    @Override
+    public void showExitDialog(){
         new android.app.AlertDialog.Builder(MainActivity.this)
                 .setTitle(R.string.app_name)
                 .setCancelable(false)
@@ -420,5 +334,70 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
+    }
+
+    @Override
+    public void getErrores(Boolean[] errores) {
+        errores[0] = til_action.getError()!=null;
+        errores[1] = til_spended_times.getError()!=null;
+        errores[2] = til_duration.getError()!=null;
+        errores[3] = til_duration.getEditText().getText().toString().isEmpty();
+        errores[4] = til_spended_times.getEditText().getText().toString().isEmpty();
+        errores[5] = til_action.getEditText().getText().toString().isEmpty();
+        errores[6] = til_userBirthdate.getEditText().getText().toString().isEmpty();
+        errores[7] = til_userBirthdate.getError()!=null;
+        errores[8] = spinner_units.getSelectedItemPosition()==0;
+        errores[9] = spinner_time_interval.getSelectedItemPosition()==0;
+        errores[10] =  spinner_duration.getSelectedItemPosition()==0;
+
+        errores[11] =  spinner_duration.getSelectedItemPosition()==3;
+        errores[12] =  Integer.parseInt(edt_duration.getText().toString().equals("")?"0":edt_duration.getText().toString())>(Calendar.getInstance().get(Calendar.YEAR) - myCalendar.get(Calendar.YEAR));
+
+    }
+
+    @Override
+    public void getSelectedItems(int[] selectedItems) {
+        selectedItems[0] = spinner_units.getSelectedItemPosition();
+        selectedItems[1] = spinner_time_interval.getSelectedItemPosition();
+        selectedItems[2] = spinner_duration.getSelectedItemPosition();
+    }
+
+    @Override
+    public void goResultActivity(Result result) {
+        Bundle params = new Bundle();
+        params.putString("activity", edt_action.getText().toString());
+        params.putLong("dedicated_time", result.getTotalTime());
+        mFirebaseAnalytics.logEvent("calculate", params);
+
+        Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+        intent.putExtra("ACTIVITY", edt_action.getText().toString());
+        intent.putExtra("TIME", result.getTotalTime());
+        intent.putExtra("PERCENT", result.getPercent());
+        startActivity(intent);
+
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
+
+    @Override
+    public void getDuration(String[] duration) {
+        duration[0] = edt_duration.getText().toString();
+        duration[1] = edt_units.getText().toString();
+    }
+
+    @Override
+    public void showError(String error) {
+        LayoutInflater inflater = getLayoutInflater();
+        View toastLayout = inflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_toast_layout));
+        TextView textView = (TextView) toastLayout.findViewById(R.id.custom_toast_message);
+        textView.setText(error);
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(toastLayout);
+        toast.show();
     }
 }
