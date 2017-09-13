@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Timed</string>
+
+    <string name="action_hint">Activity</string>
+    <string name="birthdatre_hint">Birthdate</string>
+
+    <string name="title_time_spended">Time spended</string>
+    <string name="title_unit_time">Duration</string>
+
+    <string name="live_percent">lifetime</string>
+
+
+    <string-array name="tiempo_intervalos">
+        <item>Select…</item>
+        <item>second/s</item>
+        <item>minute/s</item>
+        <item>hour/s</item>
+    </string-array>
+
+    <string-array name="time_units">
+        <item>Select…</item>
+        <item>day/s</item>
+        <item>month/s</item>
+        <item>year/s</item>
+    </string-array>
+
+    <string name="native_ad_unit_id">ca-app-pub-9483075303153381/5695417459</string>
+    <!--<string name="test_ad">ca-app-pub-3940256099942544/6300978111</string>-->
+
+    <string name="exit_message">Are you sure you want to close the application?</string>
+
+
+    <!--Menu items-->
+    <string name="title_clear_form">Clear</string>
+    <string name="title_new_form">New</string>
+
+
+
+    <!--Errors-->
+    <string name="error_empty_action">Empty activity</string>
+    <string name="error_empty_time">Empty time</string>
+    <string name="error_empty_duration">Empty duration</string>
+    <string name="error_empty_birthdate">Empty birthdate</string>
+    <string name="error_complete">Please, complete the form</string>
+    <string name="error_duration">Duration cannot be greater than lifetime</string>
+
+</resources>
