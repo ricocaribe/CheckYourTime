@@ -6,7 +6,12 @@
           <option name="url" value="http://gitlab.com" />
           <option name="userName" value="jmricop@gmail.com" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/udacity/and-nd-firebase.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
+    <option name="cloneParentDir" value="C:\Users\30043174\AndroidProjects\android-testing-checkpoints" />
   </component>
 </application>
