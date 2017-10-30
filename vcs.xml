@@ -18,6 +18,10 @@
           <option name="url" value="https://gitlab.com/telodigo/countdownGames.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/googleads/googleads-mobile-android-examples.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
     <option name="cloneParentDir" value="C:\Users\30043174\AndroidProjects\" />
